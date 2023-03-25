@@ -21,13 +21,16 @@ include_directories(
 
 add_library(can_open src/can_open.cpp)
 add_library(node_ppm src/can_node_ppm.cpp)
+add_library(node_cst src/can_node_cst.cpp)
 
 add_executable(main main.cpp)
 
 target_link_libraries(node_ppm can_open)
+target_link_libraries(node_cst can_open)
 
 target_link_libraries( main
     node_ppm
+    node_cst
 )
 
 install(TARGETS 

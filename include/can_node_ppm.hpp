@@ -39,14 +39,15 @@ namespace CanOpenPPM
             // impostare il costruttore e distruttore protected - finiti i test
             CanNodePPM(
                 std::string sInterface, 
-                int nNodeID, std::vector<int> vObjToRead, 
+                int nNodeID, 
+                std::vector<int> vObjToRead, 
                 parametersPPM param={0.0, 0.0, 0.0, 0.0, 0.0, 0.0}
             );
 
-            virtual ~CanNodePPM() {};
-
             float getStatuswordTargetReached() { return this->m_fTargetReached; }
             void stop() {this->m_nState=  CanOpenBridge::CLOSE;}
+            
+            virtual ~CanNodePPM() {};
     };
 }
 

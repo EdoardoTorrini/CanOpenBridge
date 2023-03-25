@@ -74,12 +74,21 @@ can_open_frame CanOpen::read_data()
     return co_frame;
 }
 
-can_open_frame CanOpen::get_frame_from_data(int nMsgType, uint16_t nIndex, uint8_t nSubIndex)
+can_open_frame CanOpen::get_frame_from_data(int nMsgType, uint16_t nIndex, uint8_t nSubIndex, int nLen)
 {
+    /**
+     * @param nMsgType: Type of the Msg to Write in the "Header"
+     * @param nIndex: Index of the CanOpenFrame
+     * @param nSubIndex: SubIndex of the CanOpenFrame
+     * @param value: is evaluate if nMsgType equal to DOWNLOAD_REQ
+     * 
+     * @return co_frame: is the CanOpenFrame that resul
+    */
+   
     can_open_frame co_frame;
 
     // Configuration of the first Header Byte
-    this->get_first_byte(&co_frame.can_byte[0], nMsgType);
+    this->get_first_byte(&co_frame.can_byte[0], nMsgType, nLen);
 
     // Set Index of the CanOpenFrame
     co_frame.can_index = nIndex;

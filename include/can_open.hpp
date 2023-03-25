@@ -60,36 +60,20 @@ namespace CanOpenBridge {
             template <typename T>
             can_open_frame get_frame_from_data(int nMsgType, uint16_t nIndex, uint8_t nSubIndex, T value)
             {
-                /**
-                 * @param nMsgType: Type of the Msg to Write in the "Header"
-                 * @param nIndex: Index of the CanOpenFrame
-                 * @param nSubIndex: SubIndex of the CanOpenFrame
-                 * @param value: is evaluate if nMsgType equal to DOWNLOAD_REQ
-                 * 
-                 * @return co_frame: is the CanOpenFrame that resul
-                */
-
                 can_open_frame co_frame;
 
                 // In the First Byte of the Payload: 
                 // n is equal to the number of byte discarded starting from seventh byte
                 int nLen = CAN_MAX_PLEN - sizeof(T);
 
-                // Configuration of the first Header Byte
-                this->get_first_byte(&co_frame.can_byte[0], nMsgType, nLen);
-
-                // Set Index of the CanOpenFrame
-                co_frame.can_index = nIndex;
-
-                // Set SubIndex of the CanOpenFrame
-                co_frame.can_subIndex = nSubIndex;
+                co_frame = this->get_frame_from_data(nMsgType, nIndex, nSubIndex, nLen);
 
                 // Set Payload of the CanOpenFrame
                 memcpy(co_frame.payload, &value, sizeof(T));
 
                 return co_frame;
             }
-            can_open_frame get_frame_from_data(int nMsgType, uint16_t nIndex, uint8_t nSubIndex);
+            can_open_frame get_frame_from_data(int nMsgType, uint16_t nIndex, uint8_t nSubIndex, int nLen=0);
             void get_first_byte(bool* can_byte, int nTypeMsg, int nPayloadLen=0);
 
             template<typename Base, typename T>
