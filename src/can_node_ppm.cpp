@@ -1,5 +1,7 @@
 #include "can_node_ppm.hpp"
 
+using namespace CanOpenExceptionBase;
+
 namespace CanOpenPPM
 {
     CanNodePPM::CanNodePPM(std::string sInterface, int nNodeID, std::vector<int> vObjToRead, parametersPPM param) 

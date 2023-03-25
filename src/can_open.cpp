@@ -1,6 +1,7 @@
 #include "can_open.hpp"
 
 using namespace CanOpenBridge;
+using namespace CanOpenExceptionBase;
 
 CanOpen::CanOpen(std::string sInterface, int nNodeID)
 {
@@ -73,39 +74,6 @@ can_open_frame CanOpen::read_data()
     return co_frame;
 }
 
-template <typename T>
-can_open_frame CanOpen::get_frame_from_data(int nMsgType, uint16_t nIndex, uint8_t nSubIndex, T value)
-{
-    /**
-     * @param nMsgType: Type of the Msg to Write in the "Header"
-     * @param nIndex: Index of the CanOpenFrame
-     * @param nSubIndex: SubIndex of the CanOpenFrame
-     * @param value: is evaluate if nMsgType equal to DOWNLOAD_REQ
-     * 
-     * @return co_frame: is the CanOpenFrame that resul
-    */
-
-    can_open_frame co_frame;
-
-    // In the First Byte of the Payload: 
-    // n is equal to the number of byte discarded starting from seventh byte
-    int nLen = CAN_MAX_PLEN - sizeof(T);
-
-    // Configuration of the first Header Byte
-    this->get_first_byte(&co_frame.can_byte[0], nMsgType, nLen);
-
-    // Set Index of the CanOpenFrame
-    co_frame.can_index = nIndex;
-
-    // Set SubIndex of the CanOpenFrame
-    co_frame.can_subIndex = nSubIndex;
-
-    // Set Payload of the CanOpenFrame
-    memcpy(co_frame.payload, &value, sizeof(T));
-
-    return co_frame;
-}
-
 can_open_frame CanOpen::get_frame_from_data(int nMsgType, uint16_t nIndex, uint8_t nSubIndex)
 {
     can_open_frame co_frame;
@@ -160,52 +128,6 @@ void CanOpen::get_first_byte(bool* can_byte, int nTypeMsg, int nPayloadLen)
 }
 
 // ------------------------------------- PROTECTED METHODS --------------------------------------------------
-
-template <typename T>
-can_open_frame CanOpen::download(uint16_t nIndex, uint8_t nSubIndex, T value, int nTimeOut)
-{
-    /**
-     * @def: Write a value on the right Register, defined using Index:SubIndex
-     * 
-     * @param nIndex: is the Index of the Motor Map to set the new value
-     * @param nSubIndex: is the SubIndex of the Index
-     * @param value: is the Value to write on a certain Index:SubIndex
-     * @param nTimeOut: is the number of try where read data from the CanBus to attend if the CanOpenFrame have a different Index, by default is 5 times
-     * 
-     * @return: return a CanOpenStruct with the Response of the Server
-    */
-
-    can_open_frame co_frame;
-    can_open_frame co_frame_ret;
-    
-    // CANOpen protocol accept Payload of a maximum 4 byte long
-    if ((this->instanceof<double>(value)) || (this->instanceof<long long int>(value)))
-        throw CanOpenException(MAX_LEN_EXCEEDED, "Maximum Lenght of Payload Exceeded");
-
-    // Construct the can_open_frame using nMsgType, nIndex, nSubIndex, value
-    co_frame = this->get_frame_from_data<T>(DOWNLOAD_REQ, nIndex, nSubIndex, value);
-
-    // Applied the NodeID with the standard CanID
-    co_frame.can_id = CAN_OPEN_BASE_D_ID + this->m_nNodeID;
-
-    // Send of the data on the CanBus
-    if (this->write_data(co_frame) < 0)
-        throw CanOpenException(WRITE_ON_SCK_ERR, "Error on Write Msg -> DOWNLOAD");
-    
-    // Read the CanBus socket until the Index is equal to the Index send
-    // Using a Default TimeOut: I use to avoid infinite loop
-    for (int i = 0; i < nTimeOut; i++)
-    {
-        co_frame_ret = this->read_data();
-        if ((co_frame_ret.can_index == nIndex) && (co_frame_ret.can_subIndex == nSubIndex))
-            break;
-    }
-
-    if (co_frame_ret.can_index != nIndex)
-        throw CanOpenException(FAILED_RECV_RESP, "Failed to Read the Response from CanBus -> DOWNLOAD");
-
-    return co_frame_ret;
-}
 
 can_open_frame CanOpen::upload(uint16_t nIndex, uint8_t nSubIndex, int nTimeOut)
 {

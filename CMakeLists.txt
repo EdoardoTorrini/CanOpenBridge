@@ -16,6 +16,7 @@ endif()
 # add directory with all the headers files
 include_directories(
     "include"
+    "include/utils"
 )
 
 add_library(can_open src/can_open.cpp)

@@ -1,3 +1,7 @@
+#pragma once
+#ifndef CONFIG_MOTOR_HPP
+#define CONFIG_MOTOR_HPP
+
 #include <iostream>
 #include <map>
 
@@ -7,7 +11,7 @@ namespace CanOpenHeaderUtils
         uint16_t nIndex;   
         uint8_t nSubIndex;
     };
-    
+
     enum CanOpenConfigType {
 
         MOTOR_ENABLE = 0,
@@ -89,7 +93,7 @@ namespace CanOpenHeaderUtils
         NUMBER_OF_ERRORS = 500
     };
 
-    std::map<int, CanOpenHeader> ConfigMotor
+    inline std::map<int, CanOpenHeader> ConfigMotor
     {
         {MOTOR_ENABLE, {0x0001, 0x00}},
         {RESET, {0x6040, 0x00}},
@@ -189,3 +193,5 @@ namespace CanOpenHeaderUtils
 
     };
 }
+
+#endif

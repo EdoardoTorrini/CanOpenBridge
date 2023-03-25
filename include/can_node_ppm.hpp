@@ -1,7 +1,8 @@
-#include "can_open.hpp"
-
+#pragma once
 #ifndef CAN_NODE_PPM_HPP
 #define CAN_NODE_PPM_HPP
+
+#include "can_open.hpp"
 
 namespace CanOpenPPM
 {
@@ -36,7 +37,7 @@ namespace CanOpenPPM
         public:
 
             // impostare il costruttore e distruttore protected - finiti i test
-            CanNodePPM::CanNodePPM(
+            CanNodePPM(
                 std::string sInterface, 
                 int nNodeID, std::vector<int> vObjToRead, 
                 parametersPPM param={0.0, 0.0, 0.0, 0.0, 0.0, 0.0}
