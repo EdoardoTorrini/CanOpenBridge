@@ -1,4 +1,6 @@
 #pragma once
+#ifndef CAN_OPEN_EXCEPTION_HPP
+#define CAN_OPEN_EXCEPTION_HPP
 
 #include <string>
 #include <exception>
@@ -34,3 +36,5 @@ namespace CanOpenExceptionBase {
         FAILED_RECV_RESP = -6
     };
 }
+
+#endif
