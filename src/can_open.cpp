@@ -1,12 +1,14 @@
-#include "../include/can_open.hpp"
+#include "can_open.hpp"
 
-CanOpen::CanOpen(char* sInterface, int nNodeID)
+using namespace CanOpenBridge;
+
+CanOpen::CanOpen(std::string sInterface, int nNodeID)
 {
     this->m_socket = socket(PF_CAN, SOCK_RAW, CAN_RAW);
     if (this->m_socket < 0)
         throw CanOpenException(SOCKET_ERR, "Error on socket define");
 
-    strcpy(this->m_ifr.ifr_name, sInterface);
+    strcpy(this->m_ifr.ifr_name, sInterface.c_str());
     ioctl(this->m_socket, SIOCGIFINDEX, &this->m_ifr);
 
     memset(&this->m_addr, 0, sizeof(this->m_addr));

@@ -1,13 +1,13 @@
 #include <iostream>
-
-#include "src/can_node.cpp"
+#include "can_node_ppm.hpp"
 
 int main(int argc, char **argv)
 {
-    CanNode node1 = CanNode("vcan0", 0x01);
-    node1.set_operational_mode();
+    std::vector<int> vGetPPM = {
+        CanOpenHeaderUtils::PPM_READ_STATUSWORD_TARGET_REACHED,
+    };
+    std::string sInterface = "can0";
 
-    sleep(10);
-
+    CanOpenPPM::CanNodePPM node(sInterface, 0x01, vGetPPM);
     return 0;
 }

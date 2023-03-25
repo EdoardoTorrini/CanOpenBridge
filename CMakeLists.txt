@@ -15,7 +15,21 @@ endif()
 
 # add directory with all the headers files
 include_directories(
-    "obj/include"
+    "include"
 )
 
 add_library(can_open src/can_open.cpp)
+add_library(node_ppm src/can_node_ppm.cpp)
+
+add_executable(main main.cpp)
+
+target_link_libraries(node_ppm can_open)
+
+target_link_libraries( main
+    node_ppm
+)
+
+install(TARGETS 
+    main
+    DESTINATION ./$(PROJECT_NAME)
+)
