@@ -5,7 +5,7 @@
 int main(int argc, char* argv[])
 {
     printf("Starting program\n");
-    std::string sInterface = "can0";
+    std::string sInterface = "vcan0";
 
     try 
     {

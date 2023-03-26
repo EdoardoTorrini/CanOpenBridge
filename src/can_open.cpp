@@ -27,7 +27,6 @@ CanOpen::CanOpen(std::string sInterface, int nNodeID)
 
 void CanOpen::init()
 {
-    int nRet = 0;
     can_frame frame;
     
     frame.can_id = 0x0;

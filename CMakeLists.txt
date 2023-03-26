@@ -37,3 +37,4 @@ install(TARGETS
     main
     DESTINATION ./$(PROJECT_NAME)
 )
+set(CMAKE_BUILD_TYPE Debug)
