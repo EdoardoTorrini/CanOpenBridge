@@ -45,7 +45,8 @@ namespace CanOpenPPM
             );
 
             float getStatuswordTargetReached() { return this->m_fTargetReached; }
-            void stop() {this->m_nState=  CanOpenBridge::CLOSE;}
+            void stop() {this->m_nState =  CanOpenBridge::CLOSE;}
+            void join();
             
             virtual ~CanNodePPM() {};
     };

@@ -5,7 +5,7 @@
 int main(int argc, char* argv[])
 {
     printf("Starting program\n");
-    std::string sInterface = "vcan0";
+    std::string sInterface = "can0";
 
     try 
     {
@@ -22,10 +22,14 @@ int main(int argc, char* argv[])
             CanOpenHeaderUtils::CST_READ_VELOCITY_ACTUAL_VALUE_AVERAGED,
             CanOpenHeaderUtils::CST_READ_TORQUE_ACTUAL_VALUE
         };
-        CanOpenCST::CanNodeCST node_cst(sInterface, 0x01, vGetCST);
+        // CanOpenCST::CanNodeCST node_cst(sInterface, 0x12, vGetCST);
+
+        scanf("INSERT: %s\n");
 
         node_ppm.stop();
-        node_cst.stop();
+        node_ppm.join();
+        // node_cst.stop();
+        
     }
     catch (CanOpenExceptionBase::CanOpenException &eErr)
     {

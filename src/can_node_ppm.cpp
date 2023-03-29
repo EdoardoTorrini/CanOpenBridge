@@ -24,7 +24,7 @@ namespace CanOpenPPM
             {
                 case CanOpenBridge::OPERATION_MODE:
 
-                    co_frame = this->download(0x6060, 0x00, 0x01);
+                    co_frame = this->download(0x6060, 0x00, (uint8_t)0x01);
                     if (co_frame.can_byte[7])
                     {
                         this->m_nState = CanOpenBridge::ERROR_STATE;
@@ -101,14 +101,14 @@ namespace CanOpenPPM
 
                 case CanOpenBridge::ENABLE_DEVICE:
 
-                    co_frame = this->download(0x6040, 0x00, 0x0600);
+                    co_frame = this->download(0x6040, 0x00, (uint16_t)0x0006);
                     if (co_frame.can_byte[7])
                     {
                         this->m_nState = CanOpenBridge::ERROR_STATE;
                         break;
                     }
 
-                    co_frame = this->download(0x6040, 0x00, 0x0F00);
+                    co_frame = this->download(0x6040, 0x00, (uint16_t)0x000F);
                     if(co_frame.can_byte[7])
                     {
                         this->m_nState = CanOpenBridge::ERROR_STATE;
@@ -164,14 +164,14 @@ namespace CanOpenPPM
 
                 case CanOpenBridge::CLOSE:
 
-                    co_frame = this->download(0x6040, 0x00, 0x000B);
+                    co_frame = this->download(0x6040, 0x00, (uint16_t)0x000B);
                     if (co_frame.can_byte[7])
                     {
                         this->m_nState = CanOpenBridge::ERROR_STATE;
                         break;
                     }
 
-                    co_frame = this->download(0x6040, 0x00, 0x0000);
+                    co_frame = this->download(0x6040, 0x00, (uint16_t)0x0000);
                     if (co_frame.can_byte[7])
                     {
                         this->m_nState = CanOpenBridge::ERROR_STATE;
@@ -187,23 +187,9 @@ namespace CanOpenPPM
             }
         }
     }
-}
-/*
-void CanNodePPM::set_operational_mode()
-{
-    try
+
+    void CanNodePPM::join()
     {
-        this->download(0x6060, 0x00, (uint8_t)0x01);
-        this->download(0x6040, 0x00, (uint16_t)0x06);
-        this->download(0x6040, 0x00, (uint16_t)0x0F);
+        this->m_tPollingUpload->join();
     }
-    catch(CanOpenException& e)
-    {
-        printf (
-            "[ ERROR ]: %d, [ MESSAGE ]: %s\n",
-            e.getStatusCode(), e.getMsg()
-        );
-    }
-    
 }
-*/

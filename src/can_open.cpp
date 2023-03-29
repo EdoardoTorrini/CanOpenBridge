@@ -107,13 +107,14 @@ void CanOpen::get_first_byte(bool* can_byte, int nTypeMsg, int nPayloadLen)
      * @return bRet[CAN_OPEN_BYTE_0]: is the first byte of the CanBus Msg
     */
 
-    for (int i = 2; i >= 0; i--)
-        can_byte[i] = (uint8_t)nTypeMsg & (1 << i - 1);
-    can_byte[3] = false;
-
     switch (nTypeMsg)
     {
         case DOWNLOAD_REQ:
+
+            can_byte[0] = false;
+            can_byte[1] = false;
+            can_byte[2] = true;
+            can_byte[3] = false;
 
             for (int i = 5; i >= 4; i--)
                 can_byte[i] = (uint8_t)nPayloadLen & (1 << CAN_MAX_DLEN - i - 3);
@@ -124,6 +125,11 @@ void CanOpen::get_first_byte(bool* can_byte, int nTypeMsg, int nPayloadLen)
             break;
 
         case UPLOAD:
+
+            can_byte[0] = false;
+            can_byte[1] = true;
+            can_byte[2] = false;
+            can_byte[3] = false;
 
             for (int i = 4; i < CAN_OPEN_BYTE_0; i++)
                 can_byte[i] = nPayloadLen & (1 << i);
@@ -156,7 +162,7 @@ can_open_frame CanOpen::upload(uint16_t nIndex, uint8_t nSubIndex, int nTimeOut)
     co_frame = this->get_frame_from_data(UPLOAD, nIndex, nSubIndex);
 
     // Applied the NodeID with the standard CanID
-    co_frame.can_id = CAN_OPEN_BASE_U_ID + this->m_nNodeID;
+    co_frame.can_id = CAN_OPEN_BASE_ID + this->m_nNodeID;
 
     // Send of the data on the CanBus
     if (this->write_data(co_frame) < 0)

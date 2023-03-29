@@ -23,8 +23,7 @@ namespace CanOpenBridge {
 
     #define CAN_MAX_PLEN        4
     #define CAN_OPEN_BYTE_0     8
-    #define CAN_OPEN_BASE_D_ID  1536
-    #define CAN_OPEN_BASE_U_ID  1408
+    #define CAN_OPEN_BASE_ID  1536
 
     enum CanOpenMsgType
     {
@@ -35,7 +34,8 @@ namespace CanOpenBridge {
     };
 
     typedef struct can_open_frame {
-
+        
+        // TODO: it could be better to use uint32_t
         uint16_t can_id;
         bool can_byte[CAN_OPEN_BYTE_0];
         uint16_t can_index;
@@ -69,6 +69,7 @@ namespace CanOpenBridge {
                 co_frame = this->get_frame_from_data(nMsgType, nIndex, nSubIndex, nLen);
 
                 // Set Payload of the CanOpenFrame
+                std::fill(co_frame.payload, co_frame.payload + sizeof(int), 0);
                 memcpy(co_frame.payload, &value, sizeof(T));
 
                 return co_frame;
@@ -110,7 +111,7 @@ namespace CanOpenBridge {
                 co_frame = this->get_frame_from_data<T>(DOWNLOAD_REQ, nIndex, nSubIndex, value);
 
                 // Applied the NodeID with the standard CanID
-                co_frame.can_id = CAN_OPEN_BASE_D_ID + this->m_nNodeID;
+                co_frame.can_id = CAN_OPEN_BASE_ID + this->m_nNodeID;
 
                 // Send of the data on the CanBus
                 if (this->write_data(co_frame) < 0)
@@ -120,6 +121,7 @@ namespace CanOpenBridge {
                     );
                 
                 // Read the CanBus socket until the Index is equal to the Index send
+                // TODO: Check the msg also on the NodeID
                 // Using a Default TimeOut: I use to avoid infinite loop
                 for (int i = 0; i < nTimeOut; i++)
                 {
